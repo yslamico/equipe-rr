@@ -13,6 +13,8 @@ import CooperationDetails from "./pages/CooperationDetails";
 import Dashboard from "./pages/Dashboard";
 import Finance from "./pages/Finance";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
 
 function Protected({ children }) {
   const { loading, isAuthenticated } = useAuth();
@@ -76,7 +78,19 @@ export default function App() {
             </Protected>
           }
         />
+        <Route
+          path="/perfil"
+          element={
+            <Protected>
+              <Profile />
+            </Protected>
+          }
+        />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/cadastro"
+          element={<Register />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

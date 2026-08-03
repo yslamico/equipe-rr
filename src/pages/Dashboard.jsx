@@ -140,10 +140,26 @@ export default function Dashboard() {
       <div className="min-w-0 flex-1">
         <Navbar />
 
-        <main className="relative z-10 p-4 sm:p-6">
-          <Hero />
+        <main className="relative z-10 px-3 pb-24 pt-3 sm:p-6">
+          <div className="hidden sm:block">
+            <Hero />
+          </div>
 
-          <div className="mt-5">
+          <section className="mb-5 rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-600/20 via-fuchsia-500/10 to-transparent p-4 shadow-xl shadow-purple-950/20 sm:hidden">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
+              Destaques de hoje
+            </p>
+
+            <h1 className="mt-2 text-2xl font-black leading-tight text-white">
+              Escolha sua próxima cooperação
+            </h1>
+
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              Veja primeiro as oportunidades disponíveis e fale pelo WhatsApp.
+            </p>
+          </section>
+
+          <div className="hidden sm:block sm:mt-5">
             <ExecutiveStats
               totalPago={resumo.totalPago}
               totalPendente={resumo.totalPendente}
@@ -156,10 +172,10 @@ export default function Dashboard() {
             />
           </div>
 
-          <section className="mt-8">
+          <section className="mt-0 sm:mt-8">
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-3xl font-bold">
+                <h2 className="text-2xl font-black sm:text-3xl">
                   Cooperações disponíveis
                 </h2>
 
@@ -172,7 +188,7 @@ export default function Dashboard() {
                 type="button"
                 onClick={refresh}
                 disabled={loading}
-                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.06] disabled:opacity-50"
+                className="hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.06] disabled:opacity-50 sm:block"
               >
                 Atualizar cooperações
               </button>
@@ -216,7 +232,7 @@ export default function Dashboard() {
             )}
           </section>
 
-          <section className="mt-8 grid gap-5 lg:grid-cols-3">
+          <section className="mt-8 hidden gap-5 sm:grid lg:grid-cols-3">
             <article className="rounded-3xl border border-white/10 bg-[#0b1020]/90 p-6 shadow-xl backdrop-blur-xl">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10">

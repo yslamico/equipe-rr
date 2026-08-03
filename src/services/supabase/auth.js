@@ -21,7 +21,6 @@ export async function cadastrarUsuario({
   nome,
   email,
   senha,
-  role = "blogueiro",
 }) {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -29,7 +28,7 @@ export async function cadastrarUsuario({
     options: {
       data: {
         nome,
-        role,
+        role: "blogueiro",
       },
     },
   });

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -232,9 +232,21 @@ export default function Login() {
               </button>
             </form>
 
-            <p className="mt-6 text-center text-sm text-slate-500">
-              O cadastro de contas será controlado pelo administrador.
-            </p>
+            <div className="mt-6 space-y-3 text-center">
+              <p className="text-sm text-slate-400">
+                Ainda não possui acesso?{" "}
+                <Link
+                  to="/cadastro"
+                  className="font-semibold text-purple-300 transition hover:text-purple-200"
+                >
+                  Criar conta
+                </Link>
+              </p>
+
+              <p className="text-xs text-slate-600">
+                Novos cadastros entram como blogueiro.
+              </p>
+            </div>
           </div>
         </section>
       </main>

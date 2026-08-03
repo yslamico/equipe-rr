@@ -89,6 +89,18 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  async function refreshPerfil() {
+    if (!session?.user) {
+      setPerfil(null);
+      return null;
+    }
+
+    const perfilAtual = await getPerfilAtual();
+    setPerfil(perfilAtual);
+
+    return perfilAtual;
+  }
+
   async function logout() {
     await sair();
     setSession(null);
@@ -104,6 +116,7 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(session?.user),
       isAdmin: perfil?.role === "admin",
       isBlogueiro: perfil?.role === "blogueiro",
+      refreshPerfil,
       logout,
     }),
     [session, perfil, loading],
