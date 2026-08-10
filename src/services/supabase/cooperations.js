@@ -27,6 +27,7 @@ function mapFromDatabase(row) {
     id: row.id,
     nome: row.nome,
     categoria: row.categoria,
+    modeloPlataforma: row.modelo_plataforma || "",
     descricao: row.descricao || "",
     imagem: row.imagem_url || "",
     salario: formatCurrency(row.salario),
@@ -62,6 +63,8 @@ function mapToDatabase(cooperacao) {
   return {
     nome: cooperacao.nome,
     categoria: cooperacao.categoria || "Cassino",
+    modelo_plataforma:
+      cooperacao.modeloPlataforma || null,
     descricao: cooperacao.descricao || null,
     imagem_url: cooperacao.imagem || null,
     salario: toNumber(cooperacao.salario),
@@ -71,21 +74,28 @@ function mapToDatabase(cooperacao) {
     minimo_depositantes: Number(
       cooperacao.minimoDepositantes || 0,
     ),
-    distribuicao: cooperacao.distribuicao || "Alta",
-    contas_demo: Number(cooperacao.contasDemo || 0),
+    distribuicao:
+      cooperacao.distribuicao || "Alta",
+    contas_demo: Number(
+      cooperacao.contasDemo || 0,
+    ),
     deposito_minimo: toNumber(
       cooperacao.depositoMinimo,
     ),
-    saque_minimo: toNumber(cooperacao.saqueMinimo),
+    saque_minimo: toNumber(
+      cooperacao.saqueMinimo,
+    ),
     data_encerramento:
       cooperacao.dataEncerramento || null,
-    link_cadastro: cooperacao.linkCadastro || null,
+    link_cadastro:
+      cooperacao.linkCadastro || null,
     regras: cooperacao.regras || null,
     beneficios: cooperacao.beneficios || null,
     suporte: cooperacao.suporte || null,
     whatsapp_numero:
-      sanitizeWhatsapp(cooperacao.whatsappNumero) ||
-      null,
+      sanitizeWhatsapp(
+        cooperacao.whatsappNumero,
+      ) || null,
     mensagem_whatsapp:
       cooperacao.mensagemWhatsApp || null,
     status: cooperacao.status || "Ativa",
@@ -98,7 +108,9 @@ export async function getCooperacoesSupabase() {
   const { data, error } = await supabase
     .from("cooperacoes")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", {
+      ascending: false,
+    });
 
   if (error) {
     console.error(
@@ -155,7 +167,9 @@ export async function saveCooperacaoSupabase(
   return mapFromDatabase(data);
 }
 
-export async function removeCooperacaoSupabase(id) {
+export async function removeCooperacaoSupabase(
+  id,
+) {
   const { error } = await supabase
     .from("cooperacoes")
     .delete()
@@ -171,7 +185,9 @@ export async function removeCooperacaoSupabase(id) {
   }
 }
 
-export async function getCooperacaoSupabase(id) {
+export async function getCooperacaoSupabase(
+  id,
+) {
   const { data, error } = await supabase
     .from("cooperacoes")
     .select("*")

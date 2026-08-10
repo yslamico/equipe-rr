@@ -50,7 +50,7 @@ export default function Bloggers() {
 
             <p className="mt-2 max-w-2xl text-slate-400">
               {tela === "lista"
-                ? "Gerencie os blogueiros cadastrados na EQUIPE RR."
+                ? "Gerencie os blogueiros cadastrados na BoraCoop."
                 : blogueiroSelecionado
                   ? "Altere os dados do blogueiro e salve."
                   : "Cadastre os dados completos do novo blogueiro."}

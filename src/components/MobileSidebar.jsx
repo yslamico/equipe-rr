@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   BarChart3,
-  Gift,
   Handshake,
   LayoutDashboard,
   LogOut,
+  Mail,
+  MessageCircle,
   Package,
   Settings,
   Trophy,
@@ -19,14 +20,14 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import logoEquipeRR from "../assets/logo-equipe-rr.png";
+import logoBoraCoop from "../assets/icone-boracoop.png";
 import { useAuth } from "../contexts/AuthContext";
 
 const adminItems = [
   {
     icon: LayoutDashboard,
     label: "Dashboard",
-    path: "/",
+    path: "/app",
     end: true,
   },
   {
@@ -48,11 +49,6 @@ const adminItems = [
     icon: Package,
     label: "Contas Demo",
     path: "/contas-demo",
-  },
-  {
-    icon: Gift,
-    label: "Brindes",
-    path: "/brindes",
   },
   {
     icon: BarChart3,
@@ -80,18 +76,18 @@ const bloggerItems = [
   {
     icon: LayoutDashboard,
     label: "Meu painel",
-    path: "/",
+    path: "/app",
     end: true,
   },
   {
     icon: Handshake,
     label: "Cooperações",
-    path: "/",
+    path: "/cooperacoes",
   },
   {
-    icon: Wallet,
-    label: "Meus pagamentos",
-    path: "/financeiro",
+    icon: Package,
+    label: "Contas Demo",
+    path: "/contas-demo",
   },
   {
     icon: Trophy,
@@ -210,15 +206,15 @@ export default function MobileSidebar() {
           <div className="flex items-center gap-3">
             <div className="h-14 w-14 overflow-hidden rounded-2xl border border-purple-400/20 bg-[#0b1020]">
               <img
-                src={logoEquipeRR}
-                alt="Logo da EQUIPE RR"
+                src={logoBoraCoop}
+                alt="BoraCoop"
                 className="h-full w-full object-cover"
               />
             </div>
 
             <div className="min-w-0">
               <h2 className="truncate text-lg font-black text-white">
-                EQUIPE RR
+                BoraCoop
               </h2>
 
               <p className="truncate text-xs capitalize text-slate-500">
@@ -266,6 +262,62 @@ export default function MobileSidebar() {
         </nav>
 
         <div className="border-t border-white/10 p-4">
+
+          <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-300">
+              Suporte BoraCoop
+            </p>
+
+            <div className="mt-3 grid gap-2">
+              <a
+                href="https://wa.me/5589981515242"
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-11 items-center gap-3 rounded-xl bg-emerald-500/10 px-3 text-sm font-semibold text-emerald-300"
+              >
+                <MessageCircle size={17} />
+                WhatsApp
+              </a>
+
+              <a
+                href="mailto:contato.boracoop@gmail.com"
+                className="flex min-h-11 items-center gap-3 rounded-xl bg-indigo-500/10 px-3 text-sm font-semibold text-indigo-300"
+              >
+                <Mail size={17} />
+                E-mail
+              </a>
+
+              <a
+                href="https://instagram.com/boracoopoficial"
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-11 items-center gap-3 rounded-xl bg-fuchsia-500/10 px-3 text-sm font-semibold text-fuchsia-300"
+              >
+                <span className="flex h-[17px] w-[17px] items-center justify-center text-sm font-black">
+                  @
+                </span>
+                @boracoopoficial
+              </a>
+
+              <a
+                href="https://instagram.com/yslamico"
+                target="_blank"
+                rel="noreferrer"
+                className="flex min-h-11 items-center gap-3 rounded-xl bg-purple-500/10 px-3 text-sm font-semibold text-purple-300"
+              >
+                <span className="flex h-[17px] w-[17px] items-center justify-center text-sm font-black">
+                  @
+                </span>
+                <span>
+                  @yslamico
+                  <span className="block text-[10px] font-medium text-slate-500">
+                    Guilherme · Fundador & CEO
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={sairDoSistema}

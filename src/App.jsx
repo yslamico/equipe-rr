@@ -9,26 +9,109 @@ import { useAuth } from "./contexts/AuthContext";
 
 import Admin from "./pages/Admin";
 import Bloggers from "./pages/Bloggers";
+import BloggerDashboard from "./pages/BloggerDashboard";
+import BloggerCooperations from "./pages/BloggerCooperations";
 import CooperationDetails from "./pages/CooperationDetails";
 import Dashboard from "./pages/Dashboard";
+import DemoAccounts from "./pages/DemoAccounts";
+import EmailConfirmed from "./pages/EmailConfirmed";
 import Finance from "./pages/Finance";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Ranking from "./pages/Ranking";
 import Register from "./pages/Register";
+import Statistics from "./pages/Statistics";
+
+function HomePage() {
+  const { perfil } = useAuth();
+
+  if (perfil?.role === "admin") {
+    return <Dashboard />;
+  }
+
+  return <BloggerDashboard />;
+}
+
+function LoadingScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#050816] text-white">
+      Carregando...
+    </div>
+  );
+}
 
 function Protected({ children }) {
-  const { loading, isAuthenticated } = useAuth();
+  const {
+    loading,
+    isAuthenticated,
+  } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#050816] text-white">
-        Carregando...
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!isAuthenticated) {
-    return <Login />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const {
+    loading,
+    isAuthenticated,
+    perfil,
+  } = useAuth();
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
+  }
+
+  if (perfil?.role !== "admin") {
+    return (
+      <Navigate
+        to="/app"
+        replace
+      />
+    );
+  }
+
+  return children;
+}
+
+function PublicOnly({ children }) {
+  const {
+    loading,
+    isAuthenticated,
+  } = useAuth();
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return (
+      <Navigate
+        to="/app"
+        replace
+      />
+    );
   }
 
   return children;
@@ -40,36 +123,54 @@ export default function App() {
       <Routes>
         <Route
           path="/"
+          element={<Landing />}
+        />
+
+        <Route
+          path="/app"
           element={
             <Protected>
-              <Dashboard />
+              <HomePage />
             </Protected>
           }
         />
+
         <Route
           path="/admin"
           element={
-            <Protected>
+            <AdminRoute>
               <Admin />
-            </Protected>
+            </AdminRoute>
           }
         />
+
         <Route
           path="/blogueiros"
           element={
-            <Protected>
+            <AdminRoute>
               <Bloggers />
-            </Protected>
+            </AdminRoute>
           }
         />
+
         <Route
           path="/financeiro"
           element={
-            <Protected>
+            <AdminRoute>
               <Finance />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/cooperacoes"
+          element={
+            <Protected>
+              <BloggerCooperations />
             </Protected>
           }
         />
+
         <Route
           path="/cooperacao"
           element={
@@ -78,6 +179,7 @@ export default function App() {
             </Protected>
           }
         />
+
         <Route
           path="/perfil"
           element={
@@ -86,12 +188,66 @@ export default function App() {
             </Protected>
           }
         />
-        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/ranking"
+          element={
+            <Protected>
+              <Ranking />
+            </Protected>
+          }
+        />
+
+        <Route
+          path="/contas-demo"
+          element={
+            <Protected>
+              <DemoAccounts />
+            </Protected>
+          }
+        />
+
+        <Route
+          path="/estatisticas"
+          element={
+            <AdminRoute>
+              <Statistics />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/email-confirmado"
+          element={<EmailConfirmed />}
+        />
+
+        <Route
+          path="/login"
+          element={
+            <PublicOnly>
+              <Login />
+            </PublicOnly>
+          }
+        />
+
         <Route
           path="/cadastro"
-          element={<Register />}
+          element={
+            <PublicOnly>
+              <Register />
+            </PublicOnly>
+          }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/"
+              replace
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -1,16 +1,19 @@
 import {
   Handshake,
   Home,
+  Trophy,
   User,
   Wallet,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
-const items = [
+import { useAuth } from "../contexts/AuthContext";
+
+const adminItems = [
   {
     icon: Home,
     label: "Início",
-    path: "/",
+    path: "/app",
     end: true,
   },
   {
@@ -30,16 +33,47 @@ const items = [
   },
 ];
 
+const bloggerItems = [
+  {
+    icon: Home,
+    label: "Início",
+    path: "/app",
+    end: true,
+  },
+  {
+    icon: Handshake,
+    label: "Coops",
+    path: "/cooperacoes",
+  },
+  {
+    icon: Trophy,
+    label: "Ranking",
+    path: "/ranking",
+  },
+  {
+    icon: User,
+    label: "Perfil",
+    path: "/perfil",
+  },
+];
+
 export default function MobileBottomNav() {
+  const { perfil } = useAuth();
+
+  const items =
+    perfil?.role === "admin"
+      ? adminItems
+      : bloggerItems;
+
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#070b18]/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
-      <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-[#070b18]/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
+      <div className="mx-auto grid max-w-lg grid-cols-4 gap-1">
         {items.map((item) => {
           const Icon = item.icon;
 
           return (
             <NavLink
-              key={item.label}
+              key={`${item.label}-${item.path}`}
               to={item.path}
               end={item.end}
               className={({ isActive }) =>

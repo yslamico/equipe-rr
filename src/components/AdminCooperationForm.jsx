@@ -11,9 +11,13 @@ import {
   saveCooperacaoSupabase,
 } from "../services/supabase/cooperations";
 
+import CooperationMediaManager from "./CooperationMediaManager";
+
+
 const emptyForm = {
   nome: "",
   categoria: "Cassino",
+  modeloPlataforma: "",
   descricao: "",
   salario: "",
   valorDepositante: "",
@@ -55,6 +59,9 @@ export default function AdminCooperationForm({
   const [imagem, setImagem] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [mensagem, setMensagem] = useState("");
+  const [savedCooperacaoId, setSavedCooperacaoId] = useState(
+    initialData?.id || "",
+  );
 
   useEffect(() => {
     if (initialData) {
@@ -64,9 +71,11 @@ export default function AdminCooperationForm({
       });
 
       setImagem(initialData.imagem || "");
+      setSavedCooperacaoId(initialData.id || "");
     } else {
       setForm(emptyForm);
       setImagem("");
+      setSavedCooperacaoId("");
     }
 
     setMensagem("");
@@ -76,6 +85,8 @@ export default function AdminCooperationForm({
     () => ({
       nome: form.nome || "Nome da plataforma",
       categoria: form.categoria,
+      modeloPlataforma:
+        form.modeloPlataforma || "Modelo não informado",
       salario: form.salario || "R$ 0,00",
       valorDepositante:
         form.valorDepositante || "R$ 0,00",
@@ -137,6 +148,9 @@ export default function AdminCooperationForm({
         });
 
       setMensagem("Cooperação salva no Supabase.");
+      setSavedCooperacaoId(
+        cooperacaoSalva?.id || initialData?.id || "",
+      );
 
       onSaved?.(cooperacaoSalva);
     } catch (error) {
@@ -239,6 +253,22 @@ export default function AdminCooperationForm({
                 <option>Outra</option>
               </select>
             </Field>
+
+            <div className="md:col-span-2">
+              <Field label="Modelo da plataforma">
+                <input
+                  name="modeloPlataforma"
+                  value={form.modeloPlataforma}
+                  onChange={updateField}
+                  placeholder="Ex.: Cassino + Esportes, Slots + Ao vivo, Plataforma completa..."
+                  className={inputClass}
+                />
+              </Field>
+
+              <p className="mt-2 text-xs leading-5 text-slate-500">
+                Campo livre: escreva como você quer apresentar o modelo da plataforma.
+              </p>
+            </div>
 
             <div className="md:col-span-2">
               <Field label="Descrição">
@@ -453,6 +483,28 @@ export default function AdminCooperationForm({
         </div>
       </section>
 
+      {savedCooperacaoId ? (
+        <CooperationMediaManager
+          cooperacaoId={savedCooperacaoId}
+        />
+      ) : (
+        <section className="rounded-3xl border border-dashed border-purple-500/20 bg-purple-500/[0.04] p-6 text-center">
+          <Upload
+            size={28}
+            className="mx-auto text-purple-300"
+          />
+
+          <h2 className="mt-3 text-xl font-bold text-white">
+            Mídias da plataforma
+          </h2>
+
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            Salve a cooperação primeiro. Depois disso você poderá selecionar
+            várias fotos e vídeos de uma vez, pelo PC ou pela galeria do celular.
+          </p>
+        </section>
+      )}
+
       <section className="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-indigo-500/5 p-6">
         <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-[#070b18] p-5 sm:flex-row sm:items-center">
           <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 text-xl font-black">
@@ -472,8 +524,9 @@ export default function AdminCooperationForm({
               {preview.nome}
             </h3>
 
-            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-4">
+            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-5">
               <span>{preview.categoria}</span>
+              <span>{preview.modeloPlataforma}</span>
               <span>{preview.salario}</span>
               <span>{preview.valorDepositante}</span>
               <span>WhatsApp: {preview.whatsappNumero}</span>

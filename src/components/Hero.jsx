@@ -9,7 +9,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-2xl">
         <div className="inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-500/10 px-4 py-2 text-sm font-semibold text-purple-200">
           <Sparkles size={16} />
-          EQUIPE RR
+          BoraCoop
         </div>
 
         <h1 className="mt-5 text-4xl font-black leading-tight sm:text-5xl">

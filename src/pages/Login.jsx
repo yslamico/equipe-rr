@@ -9,7 +9,8 @@ import {
   Mail,
 } from "lucide-react";
 
-import logoEquipeRR from "../assets/logo-equipe-rr.png";
+import logoBoraCoop from "../assets/logo-boracoop.png";
+import iconeBoraCoop from "../assets/icone-boracoop.png";
 import BackgroundEffects from "../components/BackgroundEffects";
 import { entrarComEmail } from "../services/supabase/auth";
 
@@ -55,38 +56,32 @@ export default function Login() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#050816] px-4 py-10 text-white">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#050816] px-3 py-6 text-white sm:px-4 sm:py-10">
       <BackgroundEffects />
 
       <main className="relative z-10 grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#0b1020]/95 shadow-2xl shadow-purple-950/40 backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
         <section className="hidden min-h-[680px] flex-col justify-between bg-gradient-to-br from-indigo-700/50 via-purple-700/30 to-fuchsia-700/20 p-10 lg:flex">
-          <div className="flex items-center gap-4">
-            <div className="h-20 w-20 overflow-hidden rounded-3xl border border-white/15 bg-[#070b18] shadow-xl">
+          <div>
+            <div className="max-w-[340px] overflow-hidden rounded-[1.75rem] border border-purple-400/20 bg-[#070b18]/80 p-3 shadow-2xl shadow-purple-950/40">
               <img
-                src={logoEquipeRR}
-                alt="Logo da EQUIPE RR"
-                className="h-full w-full object-cover"
+                src={logoBoraCoop}
+                alt="BoraCoop"
+                className="h-auto w-full object-contain"
               />
-            </div>
-
-            <div>
-              <p className="text-sm uppercase tracking-[0.35em] text-purple-200">
-                Sistema oficial
-              </p>
-
-              <h1 className="mt-2 text-3xl font-black">
-                EQUIPE RR
-              </h1>
             </div>
           </div>
 
           <div>
-            <p className="max-w-lg text-5xl font-black leading-tight">
-              Gestão de cooperações, blogueiros e pagamentos.
+            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-purple-200">
+              Plataforma oficial
             </p>
 
+            <h1 className="mt-4 max-w-lg text-5xl font-black leading-tight">
+              Bora transformar influência em resultado?
+            </h1>
+
             <p className="mt-6 max-w-md text-lg leading-8 text-slate-300">
-              Entre com sua conta para acessar o painel da equipe.
+              Cooperações, pagamentos e gestão de oportunidades em um só lugar.
             </p>
           </div>
 
@@ -95,24 +90,24 @@ export default function Login() {
           </p>
         </section>
 
-        <section className="p-6 sm:p-10 lg:p-12">
+        <section className="p-5 sm:p-10 lg:p-12">
           <div className="mx-auto max-w-md">
             <div className="mb-8 flex items-center gap-4 lg:hidden">
-              <div className="h-16 w-16 overflow-hidden rounded-2xl border border-purple-400/20 bg-[#070b18]">
+              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-purple-400/20 bg-[#070b18] shadow-lg shadow-purple-950/30">
                 <img
-                  src={logoEquipeRR}
-                  alt="Logo da EQUIPE RR"
+                  src={iconeBoraCoop}
+                  alt="BoraCoop"
                   className="h-full w-full object-cover"
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.3em] text-purple-300">
-                  Sistema oficial
+                  Plataforma oficial
                 </p>
 
-                <h1 className="mt-1 text-2xl font-black">
-                  EQUIPE RR
+                <h1 className="mt-1 truncate text-2xl font-black">
+                  BoraCoop
                 </h1>
               </div>
             </div>
@@ -121,12 +116,12 @@ export default function Login() {
               Bem-vindo
             </p>
 
-            <h2 className="mt-3 text-4xl font-black">
+            <h2 className="mt-3 text-3xl font-black sm:text-4xl">
               Entrar no painel
             </h2>
 
-            <p className="mt-3 text-slate-400">
-              Use o e-mail e a senha cadastrados no sistema.
+            <p className="mt-3 text-sm leading-6 text-slate-400 sm:text-base">
+              Use seu e-mail e senha para acessar a BoraCoop.
             </p>
 
             <form
@@ -141,7 +136,7 @@ export default function Login() {
                 <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#070b18] px-4 focus-within:border-purple-500/40 focus-within:ring-4 focus-within:ring-purple-500/5">
                   <Mail
                     size={19}
-                    className="text-slate-500"
+                    className="shrink-0 text-slate-500"
                   />
 
                   <input
@@ -151,9 +146,9 @@ export default function Login() {
                       setEmail(event.target.value);
                       setErro("");
                     }}
-                    placeholder="voce@equiperr.com"
+                    placeholder="voce@boracoop.com"
                     autoComplete="email"
-                    className="w-full bg-transparent py-4 text-white outline-none placeholder:text-slate-600"
+                    className="min-w-0 w-full bg-transparent py-4 text-white outline-none placeholder:text-slate-600"
                     required
                   />
                 </div>
@@ -167,7 +162,7 @@ export default function Login() {
                 <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#070b18] px-4 focus-within:border-purple-500/40 focus-within:ring-4 focus-within:ring-purple-500/5">
                   <LockKeyhole
                     size={19}
-                    className="text-slate-500"
+                    className="shrink-0 text-slate-500"
                   />
 
                   <input
@@ -181,7 +176,7 @@ export default function Login() {
                     }}
                     placeholder="Sua senha"
                     autoComplete="current-password"
-                    className="w-full bg-transparent py-4 text-white outline-none placeholder:text-slate-600"
+                    className="min-w-0 w-full bg-transparent py-4 text-white outline-none placeholder:text-slate-600"
                     required
                   />
 
@@ -192,7 +187,7 @@ export default function Login() {
                         (current) => !current,
                       )
                     }
-                    className="text-slate-500 transition hover:text-white"
+                    className="shrink-0 text-slate-500 transition hover:text-white"
                     aria-label={
                       mostrarSenha
                         ? "Ocultar senha"
@@ -217,7 +212,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 font-bold text-white shadow-lg shadow-purple-950/30 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 px-6 font-bold text-white shadow-lg shadow-purple-950/30 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <LoaderCircle

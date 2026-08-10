@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  Camera,
+  ImagePlus,
   LoaderCircle,
   Save,
   Upload,
@@ -8,22 +8,31 @@ import {
 } from "lucide-react";
 
 import {
-  saveBlogueiroSupabase,
-} from "../services/supabase/bloggers";
+  saveCooperacaoSupabase,
+} from "../services/supabase/cooperations";
+
 
 const emptyForm = {
   nome: "",
-  whatsapp: "",
-  instagram: "",
-  telegram: "",
-  cidade: "",
-  estado: "",
-  pix: "",
-  cpf: "",
-  status: "Ativo",
-  nivel: "Bronze",
-  cooperacoes: 0,
-  totalGanho: "R$ 0,00",
+  categoria: "Cassino",
+  modeloPlataforma: "",
+  descricao: "",
+  salario: "",
+  valorDepositante: "",
+  minimoDepositantes: "",
+  distribuicao: "Alta",
+  contasDemo: "",
+  depositoMinimo: "",
+  saqueMinimo: "",
+  dataEncerramento: "",
+  linkCadastro: "",
+  regras: "",
+  beneficios: "",
+  suporte: "",
+  whatsappNumero: "",
+  mensagemWhatsApp:
+    "Olá! Quero participar da cooperação {PLATAFORMA}. Meu ID é:",
+  status: "Ativa",
 };
 
 function Field({ label, children }) {
@@ -32,7 +41,6 @@ function Field({ label, children }) {
       <span className="mb-2 block text-sm font-semibold text-slate-300">
         {label}
       </span>
-
       {children}
     </label>
   );
@@ -41,14 +49,17 @@ function Field({ label, children }) {
 const inputClass =
   "w-full rounded-2xl border border-white/10 bg-[#070b18] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-purple-500/40 focus:ring-4 focus:ring-purple-500/5";
 
-export default function AdminBloggerForm({
+export default function AdminCooperationForm({
   initialData = null,
   onSaved,
 }) {
   const [form, setForm] = useState(emptyForm);
-  const [foto, setFoto] = useState("");
+  const [imagem, setImagem] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [mensagem, setMensagem] = useState("");
+  const [savedCooperacaoId, setSavedCooperacaoId] = useState(
+    initialData?.id || "",
+  );
 
   useEffect(() => {
     if (initialData) {
@@ -57,27 +68,48 @@ export default function AdminBloggerForm({
         ...initialData,
       });
 
-      setFoto(initialData.foto || "");
+      setImagem(initialData.imagem || "");
+      setSavedCooperacaoId(initialData.id || "");
     } else {
       setForm(emptyForm);
-      setFoto("");
+      setImagem("");
+      setSavedCooperacaoId("");
     }
 
     setMensagem("");
   }, [initialData]);
+
+  const preview = useMemo(
+    () => ({
+      nome: form.nome || "Nome da plataforma",
+      categoria: form.categoria,
+      modeloPlataforma:
+        form.modeloPlataforma || "Modelo não informado",
+      salario: form.salario || "R$ 0,00",
+      valorDepositante:
+        form.valorDepositante || "R$ 0,00",
+      contasDemo: form.contasDemo || "0",
+      status: form.status,
+      whatsappNumero: form.whatsappNumero || "Número não informado",
+    }),
+    [form],
+  );
 
   function updateField(event) {
     const { name, value } = event.target;
 
     setForm((current) => ({
       ...current,
-      [name]: value,
+      [name]:
+        name === "whatsappNumero"
+          ? value.replace(/\D/g, "")
+          : value,
     }));
 
     setMensagem("");
   }
 
-  function handlePhoto(event) {
+  function handleImage(event) {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -85,15 +117,15 @@ export default function AdminBloggerForm({
     const reader = new FileReader();
 
     reader.onload = () => {
-      setFoto(String(reader.result || ""));
+      setImagem(String(reader.result || ""));
       setMensagem("");
     };
 
     reader.readAsDataURL(file);
   }
 
-  function removePhoto() {
-    setFoto("");
+  function limparImagem() {
+    setImagem("");
     setMensagem("");
   }
 
@@ -104,28 +136,25 @@ export default function AdminBloggerForm({
       setSalvando(true);
       setMensagem("");
 
-      const blogueiroSalvo =
-        await saveBlogueiroSupabase({
+      const cooperacaoSalva =
+        await saveCooperacaoSupabase({
           ...form,
           id: initialData?.id,
-          userId: initialData?.userId,
-          foto,
-          cooperacoes: Number(
-            form.cooperacoes || 0,
-          ),
+          imagem,
+          pessoas: initialData?.pessoas ?? 0,
+          nota: initialData?.nota ?? "9.0",
         });
 
-      setMensagem(
-        "Blogueiro salvo no Supabase com sucesso.",
+      setMensagem("Cooperação salva no Supabase.");
+      setSavedCooperacaoId(
+        cooperacaoSalva?.id || initialData?.id || "",
       );
 
-      onSaved?.(blogueiroSalvo);
+      onSaved?.(cooperacaoSalva);
     } catch (error) {
       console.error(error);
-
       setMensagem(
-        error?.message ||
-          "Não foi possível salvar o blogueiro.",
+        "Não foi possível salvar. Confira o console do navegador.",
       );
     } finally {
       setSalvando(false);
@@ -141,28 +170,28 @@ export default function AdminBloggerForm({
           </p>
 
           <h2 className="mt-2 text-2xl font-bold text-white">
-            Dados do blogueiro
+            Informações principais
           </h2>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
+        <div className="grid gap-5 lg:grid-cols-[220px_1fr]">
           <div>
             <span className="mb-2 block text-sm font-semibold text-slate-300">
-              Foto
+              Logo ou foto
             </span>
 
             <div className="relative flex h-52 items-center justify-center overflow-hidden rounded-3xl border border-dashed border-purple-400/30 bg-[#070b18]">
-              {foto ? (
+              {imagem ? (
                 <>
                   <img
-                    src={foto}
-                    alt="Foto do blogueiro"
+                    src={imagem}
+                    alt="Prévia da plataforma"
                     className="h-full w-full object-cover"
                   />
 
                   <button
                     type="button"
-                    onClick={removePhoto}
+                    onClick={limparImagem}
                     className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-black/60 text-white backdrop-blur"
                   >
                     <X size={18} />
@@ -170,13 +199,13 @@ export default function AdminBloggerForm({
                 </>
               ) : (
                 <div className="text-center">
-                  <Camera
-                    size={38}
+                  <ImagePlus
+                    size={36}
                     className="mx-auto text-purple-400"
                   />
 
                   <p className="mt-3 text-sm text-slate-400">
-                    Escolha a foto do blogueiro
+                    Escolha a imagem da plataforma
                   </p>
                 </div>
               )}
@@ -184,100 +213,73 @@ export default function AdminBloggerForm({
 
             <label className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-3 text-sm font-semibold text-purple-200 transition hover:bg-purple-500/15">
               <Upload size={18} />
-              Selecionar foto
+              Selecionar imagem
 
               <input
                 type="file"
                 accept="image/*"
-                onChange={handlePhoto}
+                onChange={handleImage}
                 className="hidden"
               />
             </label>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
-            <Field label="Nome completo">
+            <Field label="Nome da plataforma">
               <input
                 name="nome"
                 value={form.nome}
                 onChange={updateField}
-                placeholder="Ex.: João Silva"
+                placeholder="Ex.: 777 Dots"
                 className={inputClass}
                 required
               />
             </Field>
 
-            <Field label="WhatsApp">
-              <input
-                name="whatsapp"
-                value={form.whatsapp}
+            <Field label="Categoria">
+              <select
+                name="categoria"
+                value={form.categoria}
                 onChange={updateField}
-                placeholder="(11) 99999-9999"
                 className={inputClass}
-                required
-              />
+              >
+                <option>Cassino</option>
+                <option>Esportes</option>
+                <option>Poker</option>
+                <option>Slots</option>
+                <option>Ao vivo</option>
+                <option>Outra</option>
+              </select>
             </Field>
 
-            <Field label="Instagram">
-              <input
-                name="instagram"
-                value={form.instagram}
-                onChange={updateField}
-                placeholder="@usuario"
-                className={inputClass}
-              />
-            </Field>
+            <div className="md:col-span-2">
+              <Field label="Modelo da plataforma">
+                <input
+                  name="modeloPlataforma"
+                  value={form.modeloPlataforma}
+                  onChange={updateField}
+                  placeholder="Ex.: Cassino + Esportes, Slots + Ao vivo, Plataforma completa..."
+                  className={inputClass}
+                />
+              </Field>
 
-            <Field label="Telegram">
-              <input
-                name="telegram"
-                value={form.telegram}
-                onChange={updateField}
-                placeholder="@usuario"
-                className={inputClass}
-              />
-            </Field>
+              <p className="mt-2 text-xs leading-5 text-slate-500">
+                Campo livre: escreva como você quer apresentar o modelo da plataforma.
+              </p>
+            </div>
 
-            <Field label="Cidade">
-              <input
-                name="cidade"
-                value={form.cidade}
-                onChange={updateField}
-                placeholder="Ex.: São Paulo"
-                className={inputClass}
-              />
-            </Field>
-
-            <Field label="Estado">
-              <input
-                name="estado"
-                value={form.estado}
-                onChange={updateField}
-                placeholder="Ex.: SP"
-                maxLength="2"
-                className={inputClass}
-              />
-            </Field>
-
-            <Field label="Chave PIX">
-              <input
-                name="pix"
-                value={form.pix}
-                onChange={updateField}
-                placeholder="CPF, e-mail ou telefone"
-                className={inputClass}
-              />
-            </Field>
-
-            <Field label="CPF (opcional)">
-              <input
-                name="cpf"
-                value={form.cpf}
-                onChange={updateField}
-                placeholder="000.000.000-00"
-                className={inputClass}
-              />
-            </Field>
+            <div className="md:col-span-2">
+              <Field label="Descrição">
+                <textarea
+                  name="descricao"
+                  value={form.descricao}
+                  onChange={updateField}
+                  rows="4"
+                  placeholder="Resumo da cooperação..."
+                  className={inputClass}
+                />
+              </Field>
+            </div>
           </div>
         </div>
       </section>
@@ -285,15 +287,126 @@ export default function AdminBloggerForm({
       <section className="rounded-3xl border border-white/10 bg-[#0b1020]/90 p-6 shadow-xl backdrop-blur-xl">
         <div className="mb-6">
           <p className="text-sm uppercase tracking-[0.2em] text-emerald-300">
-            Desempenho
+            Valores e metas
           </p>
 
           <h2 className="mt-2 text-2xl font-bold text-white">
-            Status e resultados
+            Pagamentos da cooperação
           </h2>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <Field label="Salário do blogueiro">
+            <input
+              name="salario"
+              value={form.salario}
+              onChange={updateField}
+              placeholder="R$ 120,00"
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Valor por depositante">
+            <input
+              name="valorDepositante"
+              value={form.valorDepositante}
+              onChange={updateField}
+              placeholder="R$ 35,00"
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Mínimo de depositantes">
+            <input
+              name="minimoDepositantes"
+              type="number"
+              min="0"
+              value={form.minimoDepositantes}
+              onChange={updateField}
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Distribuição">
+            <select
+              name="distribuicao"
+              value={form.distribuicao}
+              onChange={updateField}
+              className={inputClass}
+            >
+              <option>Alta</option>
+              <option>Média</option>
+              <option>Baixa</option>
+            </select>
+          </Field>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-white/10 bg-[#0b1020]/90 p-6 shadow-xl backdrop-blur-xl">
+        <div className="mb-6">
+          <p className="text-sm uppercase tracking-[0.2em] text-blue-300">
+            Operação
+          </p>
+
+          <h2 className="mt-2 text-2xl font-bold text-white">
+            Regras e disponibilidade
+          </h2>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <Field label="Estoque de contas demo">
+            <input
+              name="contasDemo"
+              type="number"
+              min="0"
+              value={form.contasDemo}
+              onChange={updateField}
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Depósito mínimo">
+            <input
+              name="depositoMinimo"
+              value={form.depositoMinimo}
+              onChange={updateField}
+              placeholder="R$ 10,00"
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Saque mínimo">
+            <input
+              name="saqueMinimo"
+              value={form.saqueMinimo}
+              onChange={updateField}
+              placeholder="R$ 10,00"
+              className={inputClass}
+            />
+          </Field>
+
+          <Field label="Data de encerramento">
+            <input
+              name="dataEncerramento"
+              type="date"
+              value={form.dataEncerramento}
+              onChange={updateField}
+              className={inputClass}
+            />
+          </Field>
+
+          <div className="md:col-span-2">
+            <Field label="Link de cadastro">
+              <input
+                name="linkCadastro"
+                value={form.linkCadastro}
+                onChange={updateField}
+                placeholder="https://..."
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
           <Field label="Status">
             <select
               name="status"
@@ -301,91 +414,121 @@ export default function AdminBloggerForm({
               onChange={updateField}
               className={inputClass}
             >
-              <option>Ativo</option>
-              <option>Inativo</option>
-              <option>Bloqueado</option>
+              <option>Ativa</option>
+              <option>Encerrada</option>
+              <option>Oculta</option>
             </select>
           </Field>
 
-          <Field label="Nível">
-            <select
-              name="nivel"
-              value={form.nivel}
-              onChange={updateField}
-              className={inputClass}
-            >
-              <option>Bronze</option>
-              <option>Prata</option>
-              <option>Ouro</option>
-              <option>Diamante</option>
-            </select>
-          </Field>
-
-          <Field label="Cooperações realizadas">
+          <Field label="Suporte / ouvidoria">
             <input
-              name="cooperacoes"
-              type="number"
-              min="0"
-              value={form.cooperacoes}
+              name="suporte"
+              value={form.suporte}
               onChange={updateField}
+              placeholder="Suporte 24 horas"
               className={inputClass}
             />
           </Field>
 
-          <Field label="Total ganho">
-            <input
-              name="totalGanho"
-              value={form.totalGanho}
-              onChange={updateField}
-              placeholder="R$ 0,00"
-              className={inputClass}
-            />
-          </Field>
+          <div className="md:col-span-2">
+            <Field label="Regras e proibições">
+              <textarea
+                name="regras"
+                value={form.regras}
+                onChange={updateField}
+                rows="5"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <div className="md:col-span-2">
+            <Field label="Benefícios e promoções">
+              <textarea
+                name="beneficios"
+                value={form.beneficios}
+                onChange={updateField}
+                rows="5"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <div className="md:col-span-2">
+            <Field label="Número do WhatsApp">
+              <input
+                name="whatsappNumero"
+                value={form.whatsappNumero}
+                onChange={updateField}
+                inputMode="tel"
+                placeholder="5511999999999"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <div className="md:col-span-2">
+            <Field label="Mensagem pronta do WhatsApp">
+              <textarea
+                name="mensagemWhatsApp"
+                value={form.mensagemWhatsApp}
+                onChange={updateField}
+                rows="3"
+                className={inputClass}
+              />
+            </Field>
+          </div>
         </div>
       </section>
+
+      {savedCooperacaoId ? (
+        <CooperationMediaManager
+          cooperacaoId={savedCooperacaoId}
+        />
+      ) : (
+        <section className="rounded-3xl border border-dashed border-purple-500/20 bg-purple-500/[0.04] p-6 text-center">
+          <Upload
+            size={28}
+            className="mx-auto text-purple-300"
+          />
+
+          <h2 className="mt-3 text-xl font-bold text-white">
+            Mídias da plataforma
+          </h2>
+
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            Salve a cooperação primeiro. Assim que ela for criada, você poderá
+            selecionar várias fotos e vídeos de uma vez pelo PC ou pela galeria
+            do celular.
+          </p>
+        </section>
+      )}
 
       <section className="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-indigo-500/5 p-6">
         <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-[#070b18] p-5 sm:flex-row sm:items-center">
           <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 text-xl font-black">
-            {foto ? (
+            {imagem ? (
               <img
-                src={foto}
+                src={imagem}
                 alt=""
                 className="h-full w-full object-cover"
               />
             ) : (
-              String(form.nome || "BLOG")
-                .slice(0, 3)
-                .toUpperCase()
+              preview.nome.slice(0, 3).toUpperCase()
             )}
           </div>
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-3">
-              <h3 className="text-2xl font-bold text-white">
-                {form.nome || "Nome do blogueiro"}
-              </h3>
+            <h3 className="text-2xl font-bold text-white">
+              {preview.nome}
+            </h3>
 
-              <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-                {form.status}
-              </span>
-
-              <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300">
-                {form.nivel}
-              </span>
-            </div>
-
-            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-3">
-              <span>
-                {form.whatsapp ||
-                  "WhatsApp não informado"}
-              </span>
-
-              <span>
-                {form.cooperacoes} cooperações
-              </span>
-
-              <span>{form.totalGanho}</span>
+            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-5">
+              <span>{preview.categoria}</span>
+              <span>{preview.modeloPlataforma}</span>
+              <span>{preview.salario}</span>
+              <span>{preview.valorDepositante}</span>
+              <span>WhatsApp: {preview.whatsappNumero}</span>
             </div>
           </div>
         </div>
@@ -420,7 +563,7 @@ export default function AdminBloggerForm({
               ? "Salvando..."
               : initialData
                 ? "Salvar alterações"
-                : "Salvar blogueiro"}
+                : "Salvar cooperação"}
           </button>
         </div>
       </section>

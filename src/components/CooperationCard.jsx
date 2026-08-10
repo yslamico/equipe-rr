@@ -15,6 +15,7 @@ function limparNumeroWhatsApp(numero) {
 export default function CooperationCard({
   nome,
   categoria,
+  modeloPlataforma,
   contasDemo,
   disponiveis,
   salario,
@@ -31,12 +32,19 @@ export default function CooperationCard({
 }) {
   const navigate = useNavigate();
 
-  const demo = Number(contasDemo ?? disponiveis ?? 0);
+  const demo = Number(
+    contasDemo ?? disponiveis ?? 0,
+  );
+
   const valorPorDepositante =
-    valorDepositante || depositante || "R$ 0,00";
+    valorDepositante ||
+    depositante ||
+    "R$ 0,00";
 
   const prazoExibido =
-    prazo || dataEncerramento || "Sem prazo";
+    prazo ||
+    dataEncerramento ||
+    "Sem prazo";
 
   const iniciais = String(nome || "PLT")
     .split(" ")
@@ -44,35 +52,46 @@ export default function CooperationCard({
     .join("")
     .slice(0, 3);
 
-  const percentualEstoque = Math.min(demo * 5, 100);
+  const percentualEstoque =
+    Math.min(demo * 5, 100);
 
   const numeroWhatsAppLimpo =
-    limparNumeroWhatsApp(whatsappNumero);
+    limparNumeroWhatsApp(
+      whatsappNumero,
+    );
 
   const mensagemFinal = String(
     mensagemWhatsApp ||
       "Olá! Quero participar da cooperação {PLATAFORMA}. Meu ID é:",
-  ).replaceAll("{PLATAFORMA}", nome || "");
+  ).replaceAll(
+    "{PLATAFORMA}",
+    nome || "",
+  );
 
-  const linkWhatsApp = numeroWhatsAppLimpo
-    ? `https://wa.me/${numeroWhatsAppLimpo}?text=${encodeURIComponent(
-        mensagemFinal,
-      )}`
-    : "";
+  const linkWhatsApp =
+    numeroWhatsAppLimpo
+      ? `https://wa.me/${numeroWhatsAppLimpo}?text=${encodeURIComponent(
+          mensagemFinal,
+        )}`
+      : "";
 
   const cooperationData = {
     nome,
     categoria,
+    modeloPlataforma,
     contasDemo: demo,
     salario,
-    valorDepositante: valorPorDepositante,
+    valorDepositante:
+      valorPorDepositante,
     pessoas,
     prazo,
     dataEncerramento,
     nota,
     imagem,
-    whatsappNumero: numeroWhatsAppLimpo,
-    mensagemWhatsApp: mensagemFinal,
+    whatsappNumero:
+      numeroWhatsAppLimpo,
+    mensagemWhatsApp:
+      mensagemFinal,
     ...rest,
   };
 
@@ -89,7 +108,6 @@ export default function CooperationCard({
       window.alert(
         "O número do WhatsApp desta cooperação ainda não foi cadastrado.",
       );
-
       return;
     }
 
@@ -101,12 +119,10 @@ export default function CooperationCard({
   }
 
   return (
-    <article className="group relative overflow-hidden rounded-[1.75rem] border border-purple-500/20 bg-[#0b1020]/95 p-4 shadow-xl shadow-purple-950/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-purple-500/40 sm:rounded-3xl sm:p-5">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-purple-600/10 to-transparent" />
-
+    <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b1020]/90 p-4 shadow-xl backdrop-blur-xl transition duration-300 hover:border-purple-500/20 sm:p-5">
       <div className="relative grid gap-5 xl:grid-cols-[1.25fr_1fr_auto] xl:items-center">
         <div className="flex items-start gap-3 sm:gap-3 sm:p-4">
-          <div className="relative flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 text-2xl font-black shadow-lg shadow-purple-950/50">
+          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 text-2xl font-black shadow-lg shadow-purple-950/50 sm:h-20 sm:w-20">
             {imagem ? (
               <img
                 src={imagem}
@@ -121,20 +137,31 @@ export default function CooperationCard({
           </div>
 
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-xl font-black leading-tight text-white sm:text-2xl">
                 {nome}
               </h3>
 
-              <span className="rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1 text-xs font-semibold uppercase text-purple-300">
-                {categoria}
-              </span>
+              {categoria && (
+                <span className="rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1 text-xs font-semibold uppercase text-purple-300">
+                  {categoria}
+                </span>
+              )}
 
               <span className="flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300">
-                <Star size={13} fill="currentColor" />
+                <Star
+                  size={13}
+                  fill="currentColor"
+                />
                 {nota}
               </span>
             </div>
+
+            {modeloPlataforma && (
+              <p className="mt-2 text-sm font-semibold leading-5 text-purple-200">
+                {modeloPlataforma}
+              </p>
+            )}
 
             <div className="mt-3 flex items-center gap-2 text-sm text-slate-400">
               <Package size={16} />
