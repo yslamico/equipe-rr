@@ -52,8 +52,8 @@ export default function Bloggers() {
               {tela === "lista"
                 ? "Gerencie os blogueiros cadastrados na BoraCoop."
                 : blogueiroSelecionado
-                  ? "Altere os dados do blogueiro e salve."
-                  : "Cadastre os dados completos do novo blogueiro."}
+                  ? "Altere os dados do blogueiro e salve no Supabase."
+                  : "Cadastre um novo blogueiro diretamente no Supabase."}
             </p>
           </header>
 

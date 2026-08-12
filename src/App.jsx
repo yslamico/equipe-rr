@@ -22,6 +22,7 @@ import Profile from "./pages/Profile";
 import Ranking from "./pages/Ranking";
 import Register from "./pages/Register";
 import Statistics from "./pages/Statistics";
+import Users from "./pages/Users";
 
 function HomePage() {
   const { perfil } = useAuth();
@@ -149,6 +150,15 @@ export default function App() {
           element={
             <AdminRoute>
               <Bloggers />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/usuarios"
+          element={
+            <AdminRoute>
+              <Users />
             </AdminRoute>
           }
         />
