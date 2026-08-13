@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  Eye,
   LoaderCircle,
   RefreshCw,
   Search,
@@ -7,6 +8,7 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import BackgroundEffects from "../components/BackgroundEffects";
 import Navbar from "../components/Navbar";
@@ -45,6 +47,8 @@ function initials(nome) {
 }
 
 export default function Users() {
+  const navigate = useNavigate();
+
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -110,6 +114,10 @@ export default function Users() {
       ).length,
     };
   }, [usuarios]);
+
+  function abrirPerfil(id) {
+    navigate(`/usuarios/${id}`);
+  }
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-transparent text-white lg:flex">
@@ -322,12 +330,23 @@ export default function Users() {
                           )}
                         </strong>
                       </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          abrirPerfil(usuario.id)
+                        }
+                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-3 text-sm font-semibold text-purple-200 transition hover:bg-purple-500/15"
+                      >
+                        <Eye size={17} />
+                        Ver perfil
+                      </button>
                     </article>
                   ))}
                 </div>
 
                 <div className="mt-6 hidden overflow-x-auto md:block">
-                  <table className="w-full min-w-[800px] border-separate border-spacing-y-3">
+                  <table className="w-full min-w-[900px] border-separate border-spacing-y-3">
                     <thead>
                       <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
                         <th className="px-4">
@@ -344,6 +363,9 @@ export default function Users() {
                         </th>
                         <th className="px-4">
                           Atualização
+                        </th>
+                        <th className="px-4 text-right">
+                          Ações
                         </th>
                       </tr>
                     </thead>
@@ -415,10 +437,27 @@ export default function Users() {
                               )}
                             </td>
 
-                            <td className="rounded-r-2xl px-4 py-4">
+                            <td className="px-4 py-4">
                               {formatarData(
                                 usuario.updated_at,
                               )}
+                            </td>
+
+                            <td className="rounded-r-2xl px-4 py-4">
+                              <div className="flex justify-end">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    abrirPerfil(
+                                      usuario.id,
+                                    )
+                                  }
+                                  className="inline-flex items-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-2.5 text-sm font-semibold text-purple-200 transition hover:bg-purple-500/15"
+                                >
+                                  <Eye size={17} />
+                                  Ver perfil
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ),

@@ -26,6 +26,7 @@ function mapFromDatabase(row) {
   return {
     id: row.id,
     nome: row.nome,
+    grupo: row.grupo || "",
     categoria: row.categoria,
     modeloPlataforma: row.modelo_plataforma || "",
     descricao: row.descricao || "",
@@ -62,6 +63,7 @@ function mapFromDatabase(row) {
 function mapToDatabase(cooperacao) {
   return {
     nome: cooperacao.nome,
+    grupo: cooperacao.grupo?.trim() || null,
     categoria: cooperacao.categoria || "Cassino",
     modelo_plataforma:
       cooperacao.modeloPlataforma || null,

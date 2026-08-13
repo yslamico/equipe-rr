@@ -7,6 +7,7 @@ import {
 
 import { useAuth } from "./contexts/AuthContext";
 
+import UserDetails from "./pages/UserDetails";
 import Admin from "./pages/Admin";
 import Bloggers from "./pages/Bloggers";
 import BloggerDashboard from "./pages/BloggerDashboard";
@@ -21,6 +22,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Ranking from "./pages/Ranking";
 import Register from "./pages/Register";
+import Settings from "./pages/Settings";
 import Statistics from "./pages/Statistics";
 import Users from "./pages/Users";
 
@@ -159,6 +161,24 @@ export default function App() {
           element={
             <AdminRoute>
               <Users />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/usuarios/:id"
+          element={
+            <AdminRoute>
+              <UserDetails />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/configuracoes"
+          element={
+            <AdminRoute>
+              <Settings />
             </AdminRoute>
           }
         />

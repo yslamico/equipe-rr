@@ -12,6 +12,8 @@ export default function BloggerCooperations() {
   const [busca, setBusca] = useState("");
   const [categoriaAtiva, setCategoriaAtiva] =
     useState("Todos");
+  const [grupoAtivo, setGrupoAtivo] =
+    useState("Todos");
 
   const {
     cooperacoes,
@@ -19,6 +21,19 @@ export default function BloggerCooperations() {
     error,
     refresh,
   } = useCooperations();
+
+  const gruposDisponiveis = useMemo(() => {
+    const grupos = cooperacoes
+      .map((coop) => String(coop.grupo || "").trim())
+      .filter(Boolean);
+
+    return [
+      "Todos",
+      ...Array.from(new Set(grupos)).sort((a, b) =>
+        a.localeCompare(b, "pt-BR"),
+      ),
+    ];
+  }, [cooperacoes]);
 
   const cooperacoesFiltradas = useMemo(() => {
     return cooperacoes.filter((coop) => {
@@ -35,6 +50,10 @@ export default function BloggerCooperations() {
         categoriaAtiva === "Todos" ||
         coop.categoria === categoriaAtiva;
 
+      const correspondeGrupo =
+        grupoAtivo === "Todos" ||
+        String(coop.grupo || "").trim() === grupoAtivo;
+
       const statusVisivel =
         coop.status !== "Oculta" &&
         coop.status !== "Encerrada";
@@ -42,6 +61,7 @@ export default function BloggerCooperations() {
       return (
         correspondeBusca &&
         correspondeCategoria &&
+        correspondeGrupo &&
         statusVisivel
       );
     });
@@ -49,6 +69,7 @@ export default function BloggerCooperations() {
     cooperacoes,
     busca,
     categoriaAtiva,
+    grupoAtivo,
   ]);
 
   return (
@@ -102,6 +123,34 @@ export default function BloggerCooperations() {
               setCategoriaAtiva
             }
           />
+
+          <section className="mb-5 rounded-2xl border border-white/10 bg-[#0b1020]/70 p-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="shrink-0">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Filtrar por grupo
+                </p>
+              </div>
+
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                {gruposDisponiveis.map((grupo) => (
+                  <button
+                    key={grupo}
+                    type="button"
+                    onClick={() => setGrupoAtivo(grupo)}
+                    className={[
+                      "shrink-0 rounded-xl border px-4 py-2 text-sm font-semibold transition",
+                      grupoAtivo === grupo
+                        ? "border-purple-500/40 bg-purple-500/15 text-purple-200"
+                        : "border-white/10 bg-white/[0.03] text-slate-400 hover:bg-white/[0.06] hover:text-white",
+                    ].join(" ")}
+                  >
+                    {grupo}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
 
           {error && (
             <div className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">

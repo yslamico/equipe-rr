@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   CalendarDays,
   CheckCircle2,
+  ChevronRight,
   Download,
   DownloadCloud,
   ExternalLink,
@@ -279,37 +280,58 @@ export default function CooperationDetails() {
                 )}
 
                 <p className="mt-4 max-w-3xl text-base leading-7 text-slate-300">
-                  {coop.descricao || "Detalhes completos da cooperação."}
+                  {coop.descricao || "Confira os valores, regras e materiais desta oportunidade antes de participar."}
                 </p>
               </div>
+            </div>
+          </section>
+
+          <section className="mt-4 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.05] px-5 py-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">
+                  Resumo da oportunidade
+                </p>
+                <p className="mt-1 text-sm leading-6 text-slate-300">
+                  Confira os valores, leia as regras e, se fizer sentido para você, siga o passo a passo para participar.
+                </p>
+              </div>
+
+              <a
+                href="#participar"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#04110c] transition hover:brightness-110"
+              >
+                Quero participar
+                <ChevronRight size={18} />
+              </a>
             </div>
           </section>
 
           <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <InfoCard
               icon={WalletCards}
-              title="Salário do blogueiro"
+              title="Valor fixo"
               value={coop.salario}
               accent="green"
             />
 
             <InfoCard
               icon={Users}
-              title="Valor por depositante"
+              title="Bônus por depositante"
               value={coop.valorDepositante || coop.depositante}
               accent="blue"
             />
 
             <InfoCard
               icon={Package}
-              title="Contas demo"
+              title="Contas demo disponíveis"
               value={String(coop.contasDemo ?? coop.disponiveis ?? 0)}
               accent="purple"
             />
 
             <InfoCard
               icon={CalendarDays}
-              title="Encerramento"
+              title="Prazo / encerramento"
               value={coop.dataEncerramento || coop.prazo || "Sem prazo"}
               accent="amber"
             />
@@ -352,31 +374,72 @@ export default function CooperationDetails() {
                 </p>
               </article>
 
-              <article className="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-indigo-500/5 p-6">
-                <h2 className="text-xl font-bold">Participar da cooperação</h2>
-
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Faça o cadastro na plataforma e depois envie seu ID pelo WhatsApp.
+              <article
+                id="participar"
+                className="scroll-mt-6 rounded-3xl border border-purple-500/25 bg-gradient-to-br from-purple-500/15 to-indigo-500/5 p-6 shadow-xl"
+              >
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-300">
+                  Próximo passo
                 </p>
 
-                <div className="mt-6 space-y-3">
+                <h2 className="mt-2 text-2xl font-black">
+                  Quero participar
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Leia as regras acima e siga estes dois passos para entrar nesta cooperação.
+                </p>
+
+                <div className="mt-5 space-y-3">
+                  <div className="flex gap-3 rounded-2xl border border-white/10 bg-black/10 p-4">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-sm font-black text-purple-200">
+                      1
+                    </span>
+
+                    <div>
+                      <p className="font-bold text-white">
+                        Faça o cadastro na plataforma
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">
+                        Abra o link oficial desta oportunidade e conclua seu cadastro.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 rounded-2xl border border-white/10 bg-black/10 p-4">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-sm font-black text-emerald-200">
+                      2
+                    </span>
+
+                    <div>
+                      <p className="font-bold text-white">
+                        Envie seu ID pelo WhatsApp
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">
+                        Assim a equipe consegue identificar sua participação.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 space-y-3">
                   {coop.linkCadastro ? (
                     <a
                       href={coop.linkCadastro}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 font-semibold text-white transition hover:brightness-110"
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 font-black text-white transition hover:brightness-110"
                     >
                       <ExternalLink size={18} />
-                      Abrir link de cadastro
+                      Fazer cadastro agora
                     </a>
                   ) : (
                     <button
                       type="button"
                       disabled
-                      className="w-full cursor-not-allowed rounded-xl bg-white/5 px-5 py-3 font-semibold text-slate-500"
+                      className="min-h-12 w-full cursor-not-allowed rounded-xl bg-white/5 px-5 py-3 font-semibold text-slate-500"
                     >
-                      Link não cadastrado
+                      Link de cadastro indisponível
                     </button>
                   )}
 
@@ -384,12 +447,16 @@ export default function CooperationDetails() {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3 font-semibold text-emerald-300 transition hover:bg-emerald-500/15"
+                    className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3 font-bold text-emerald-300 transition hover:bg-emerald-500/15"
                   >
                     <MessageCircle size={18} />
-                    Enviar ID no WhatsApp
+                    Enviar meu ID no WhatsApp
                   </a>
                 </div>
+
+                <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+                  Antes de participar, confirme se você atende aos requisitos e concorda com as regras da cooperação.
+                </p>
               </article>
             </aside>
           </section>
@@ -405,7 +472,7 @@ export default function CooperationDetails() {
                 </div>
 
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Banners, artes e vídeos disponíveis para divulgação.
+                  Use os materiais oficiais abaixo na divulgação desta cooperação.
                 </p>
               </div>
 
@@ -454,7 +521,7 @@ export default function CooperationDetails() {
               </div>
             ) : midias.length === 0 ? (
               <div className="mt-5 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center text-sm text-slate-500">
-                Nenhuma mídia disponível para esta cooperação ainda.
+                Esta cooperação ainda não possui materiais de divulgação disponíveis.
               </div>
             ) : (
               <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -529,7 +596,7 @@ export default function CooperationDetails() {
 
           <div className="mt-8">
             <Link
-              to="/"
+              to="/cooperacoes"
               className="inline-flex items-center gap-2 text-sm font-semibold text-purple-300 hover:text-purple-200"
             >
               <CheckCircle2 size={17} />

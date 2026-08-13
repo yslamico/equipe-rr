@@ -16,6 +16,7 @@ import CooperationMediaManager from "./CooperationMediaManager";
 
 const emptyForm = {
   nome: "",
+  grupo: "",
   categoria: "Cassino",
   modeloPlataforma: "",
   descricao: "",
@@ -84,6 +85,7 @@ export default function AdminCooperationForm({
   const preview = useMemo(
     () => ({
       nome: form.nome || "Nome da plataforma",
+      grupo: form.grupo || "Sem grupo",
       categoria: form.categoria,
       modeloPlataforma:
         form.modeloPlataforma || "Modelo não informado",
@@ -236,6 +238,19 @@ export default function AdminCooperationForm({
                 className={inputClass}
                 required
               />
+            </Field>
+
+            <Field label="Grupo">
+              <input
+                name="grupo"
+                value={form.grupo}
+                onChange={updateField}
+                placeholder="Ex.: WZ, DG, BET, Agência X..."
+                className={inputClass}
+              />
+              <p className="mt-2 text-xs leading-5 text-slate-500">
+                Campo livre. Você pode criar qualquer grupo sem alterar o código.
+              </p>
             </Field>
 
             <Field label="Categoria">
@@ -524,7 +539,8 @@ export default function AdminCooperationForm({
               {preview.nome}
             </h3>
 
-            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-5">
+            <div className="mt-4 grid gap-3 text-sm text-slate-400 sm:grid-cols-6">
+              <span>Grupo: {preview.grupo}</span>
               <span>{preview.categoria}</span>
               <span>{preview.modeloPlataforma}</span>
               <span>{preview.salario}</span>

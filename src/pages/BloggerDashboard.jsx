@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  ArrowRight,
   BadgeDollarSign,
   Clock3,
   CreditCard,
@@ -171,6 +172,18 @@ export default function BloggerDashboard() {
 
   const ultimosPagamentos = pagamentos.slice(0, 5);
 
+  const oportunidadesDisponiveis = useMemo(
+    () =>
+      cooperacoes
+        .filter(
+          (item) =>
+            item.status !== "Oculta" &&
+            item.status !== "Encerrada",
+        )
+        .slice(0, 3),
+    [cooperacoes],
+  );
+
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-transparent text-white lg:flex">
       <BackgroundEffects />
@@ -190,7 +203,7 @@ export default function BloggerDashboard() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
-              Seu resumo de ganhos, pagamentos e oportunidades.
+              Veja seus ganhos, pagamentos e as melhores oportunidades disponíveis para participar agora.
             </p>
 
             <div className="mt-6">
@@ -202,13 +215,24 @@ export default function BloggerDashboard() {
               </strong>
             </div>
 
-            <Link
-              to="/cooperacoes"
-              className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 px-5 text-sm font-bold text-white shadow-lg shadow-purple-950/30"
-            >
-              <Handshake size={18} />
-              Ver cooperações
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                to="/cooperacoes"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 px-5 text-sm font-bold text-white shadow-lg shadow-purple-950/30"
+              >
+                <Handshake size={18} />
+                Ver oportunidades
+                <ArrowRight size={17} />
+              </Link>
+
+              <Link
+                to="/perfil"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 text-sm font-semibold text-slate-200 transition hover:bg-white/[0.07]"
+              >
+                <UserRound size={17} />
+                Meu perfil
+              </Link>
+            </div>
           </section>
 
           {erro && (
@@ -220,14 +244,14 @@ export default function BloggerDashboard() {
           <section className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard
               icon={BadgeDollarSign}
-              label="Recebido"
+              label="Total recebido"
               value={formatMoney(resumo.totalPago)}
               helper={`${resumo.pagos} pagamento(s)`}
             />
 
             <StatCard
               icon={Clock3}
-              label="Pendente"
+              label="A receber"
               value={formatMoney(
                 resumo.totalPendente,
               )}
@@ -236,7 +260,7 @@ export default function BloggerDashboard() {
 
             <StatCard
               icon={Handshake}
-              label="Coops disponíveis"
+              label="Oportunidades"
               value={resumo.coopsAtivas}
               helper="Oportunidades disponíveis"
             />
@@ -251,6 +275,130 @@ export default function BloggerDashboard() {
                   : "Continue evoluindo"
               }
             />
+          </section>
+
+          <section className="mt-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-300">
+                  Oportunidades
+                </p>
+
+                <h2 className="mt-2 text-2xl font-black">
+                  Cooperações disponíveis agora
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Confira algumas oportunidades e abra os detalhes antes de participar.
+                </p>
+              </div>
+
+              <Link
+                to="/cooperacoes"
+                className="inline-flex items-center gap-2 text-sm font-bold text-purple-300 hover:text-purple-200"
+              >
+                Ver todas
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            {oportunidadesDisponiveis.length ? (
+              <div className="mt-4 grid gap-3 lg:grid-cols-3">
+                {oportunidadesDisponiveis.map((coop) => (
+                  <Link
+                    key={coop.id}
+                    to="/cooperacao"
+                    state={{ coop }}
+                    className="group rounded-3xl border border-white/10 bg-[#0b1020]/90 p-5 shadow-xl transition hover:-translate-y-0.5 hover:border-purple-500/25 hover:bg-[#0d1326]"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#070b18] font-black text-white">
+                        {coop.imagem ? (
+                          <img
+                            src={coop.imagem}
+                            alt={`Logo da ${coop.nome}`}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          String(coop.nome || "CO")
+                            .slice(0, 2)
+                            .toUpperCase()
+                        )}
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-300">
+                            {coop.status || "Ativa"}
+                          </span>
+
+                          {coop.categoria && (
+                            <span className="rounded-full bg-purple-500/10 px-2.5 py-1 text-[11px] font-semibold text-purple-200">
+                              {coop.categoria}
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 className="mt-3 truncate text-lg font-black text-white">
+                          {coop.nome}
+                        </h3>
+
+                        <p className="mt-1 line-clamp-2 text-sm leading-6 text-slate-400">
+                          {coop.descricao ||
+                            "Abra para conferir os detalhes desta cooperação."}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-2">
+                      <div className="rounded-2xl bg-white/[0.03] p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                          Valor fixo
+                        </p>
+                        <strong className="mt-1 block text-sm text-emerald-300">
+                          {coop.salario || "Consultar"}
+                        </strong>
+                      </div>
+
+                      <div className="rounded-2xl bg-white/[0.03] p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                          Por depositante
+                        </p>
+                        <strong className="mt-1 block text-sm text-white">
+                          {coop.valorDepositante ||
+                            coop.depositante ||
+                            "Consultar"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-4">
+                      <span className="text-xs text-slate-500">
+                        {coop.dataEncerramento ||
+                          coop.prazo ||
+                          "Sem prazo informado"}
+                      </span>
+
+                      <span className="inline-flex items-center gap-1 text-sm font-bold text-purple-300 transition group-hover:text-purple-200">
+                        Ver detalhes
+                        <ArrowRight size={15} />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-4 rounded-3xl border border-dashed border-white/10 bg-white/[0.02] p-7 text-center">
+                <Handshake
+                  size={28}
+                  className="mx-auto text-slate-600"
+                />
+
+                <p className="mt-3 text-sm text-slate-400">
+                  Nenhuma cooperação disponível neste momento.
+                </p>
+              </div>
+            )}
           </section>
 
           <section className="mt-6 grid gap-4 lg:grid-cols-2">
@@ -286,6 +434,10 @@ export default function BloggerDashboard() {
               <h2 className="text-xl font-black">
                 Acessos rápidos
               </h2>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Vá direto para as áreas que você mais usa.
+              </p>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <Link
@@ -396,7 +548,7 @@ export default function BloggerDashboard() {
                 </div>
               ) : (
                 <p className="py-6 text-center text-sm text-slate-500">
-                  Nenhum pagamento encontrado.
+                  Você ainda não possui pagamentos registrados.
                 </p>
               )}
             </div>

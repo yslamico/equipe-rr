@@ -26,18 +26,47 @@ import { getCooperacoesPublicas } from "../services/supabase/publicCooperations"
 const benefits = [
   {
     icon: Handshake,
-    title: "Cooperações em um só lugar",
-    text: "Veja oportunidades disponíveis e encontre rapidamente as campanhas que fazem sentido para você.",
+    title: "Oportunidades em um só lugar",
+    text: "Encontre campanhas e cooperações com informações claras sobre valores, requisitos e prazos.",
   },
   {
     icon: WalletCards,
-    title: "Pagamentos organizados",
-    text: "Acompanhe valores recebidos, pendentes e seu histórico sem depender de planilhas ou mensagens soltas.",
+    title: "Ganhos mais organizados",
+    text: "Centralize valores, histórico e informações importantes sem depender de mensagens espalhadas.",
   },
   {
     icon: Trophy,
-    title: "Ranking e evolução",
-    text: "Acompanhe seu desempenho, nível e posição dentro da comunidade BoraCoop.",
+    title: "Evolução visível",
+    text: "Acompanhe sua participação, nível e posição dentro da comunidade BoraCoop.",
+  },
+];
+
+const quickBenefits = [
+  "Cadastro gratuito",
+  "Oportunidades reais",
+  "Pagamentos organizados",
+];
+
+const faqs = [
+  {
+    question: "Preciso pagar para entrar na BoraCoop?",
+    answer:
+      "Não. O cadastro é gratuito e você pode conhecer as oportunidades disponíveis antes de decidir participar.",
+  },
+  {
+    question: "Preciso ter muitos seguidores?",
+    answer:
+      "Não necessariamente. Cada cooperação pode ter seus próprios requisitos, então sempre haverá oportunidades com perfis diferentes.",
+  },
+  {
+    question: "Como funcionam os pagamentos?",
+    answer:
+      "Cada cooperação informa as condições e valores. Dentro da plataforma você acompanha os dados da oportunidade e seu histórico.",
+  },
+  {
+    question: "Como escolho uma cooperação?",
+    answer:
+      "Você vê as oportunidades disponíveis, confere requisitos, prazo e valores e entra na que fizer sentido para o seu perfil.",
   },
 ];
 
@@ -45,17 +74,17 @@ const steps = [
   {
     number: "01",
     title: "Crie seu acesso",
-    text: "Faça seu cadastro em poucos minutos.",
+    text: "Faça seu cadastro gratuito e entre na plataforma.",
   },
   {
     number: "02",
-    title: "Escolha uma coop",
-    text: "Veja as oportunidades disponíveis para a equipe.",
+    title: "Escolha uma oportunidade",
+    text: "Compare valores, requisitos e prazos antes de participar.",
   },
   {
     number: "03",
-    title: "Acompanhe seus resultados",
-    text: "Centralize pagamentos, histórico e dados do seu perfil.",
+    title: "Acompanhe seus ganhos",
+    text: "Veja seu histórico e mantenha suas cooperações organizadas.",
   },
 ];
 
@@ -192,26 +221,18 @@ export default function Landing() {
                 to="/login"
                 className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 font-semibold text-slate-200 transition hover:bg-white/[0.06]"
               >
-                Já tenho conta
+                Entrar na minha conta
                 <LogIn size={18} />
               </Link>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-400">
-              <span className="flex items-center gap-2">
-                <CheckCircle2 size={17} className="text-emerald-400" />
-                Cadastro rápido
-              </span>
-
-              <span className="flex items-center gap-2">
-                <CheckCircle2 size={17} className="text-emerald-400" />
-                Painel responsivo
-              </span>
-
-              <span className="flex items-center gap-2">
-                <ShieldCheck size={17} className="text-emerald-400" />
-                Acesso protegido
-              </span>
+              {quickBenefits.map((item) => (
+                <span key={item} className="flex items-center gap-2">
+                  <CheckCircle2 size={17} className="text-emerald-400" />
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -256,51 +277,6 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="border-y border-white/5 bg-white/[0.015]">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
-                O que você encontra
-              </p>
-
-              <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                Menos bagunça. Mais oportunidade.
-              </h2>
-
-              <p className="mt-4 leading-7 text-slate-400">
-                A BoraCoop centraliza o que antes ficava espalhado entre mensagens,
-                planilhas e conversas.
-              </p>
-            </div>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {benefits.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <article
-                    key={item.title}
-                    className="rounded-3xl border border-white/10 bg-[#0b1020]/80 p-6 shadow-xl"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-purple-300">
-                      <Icon size={23} />
-                    </div>
-
-                    <h3 className="mt-5 text-xl font-black">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-3 text-sm leading-6 text-slate-400">
-                      {item.text}
-                    </p>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
@@ -309,11 +285,11 @@ export default function Landing() {
               </p>
 
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                Algumas coops que estão rolando agora.
+                Veja oportunidades antes mesmo de criar sua conta.
               </h2>
 
               <p className="mt-4 leading-7 text-slate-400">
-                Veja valores e requisitos antes de criar sua conta. Os detalhes completos ficam dentro da BoraCoop.
+                Compare valores, requisitos e prazos. Depois, crie sua conta gratuita para acessar todos os detalhes.
               </p>
             </div>
 
@@ -321,7 +297,7 @@ export default function Landing() {
               to="/cadastro"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-purple-500/20 bg-purple-500/10 px-5 text-sm font-bold text-purple-200 transition hover:bg-purple-500/15"
             >
-              Ver todas após entrar
+              Criar conta para ver todas
               <ArrowRight size={17} />
             </Link>
           </div>
@@ -391,7 +367,7 @@ export default function Landing() {
                     <div className="mt-5 grid grid-cols-2 gap-3">
                       <div className="rounded-2xl border border-white/5 bg-white/[0.025] p-3">
                         <p className="text-xs text-slate-500">
-                          Salário
+                          Valor fixo
                         </p>
                         <strong className="mt-1 block text-lg text-white">
                           {coop.salario}
@@ -438,6 +414,52 @@ export default function Landing() {
           </div>
         </section>
 
+
+        <section className="border-y border-white/5 bg-white/[0.015]">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
+                O que você encontra
+              </p>
+
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">
+                Mais clareza para escolher melhor.
+              </h2>
+
+              <p className="mt-4 leading-7 text-slate-400">
+                Oportunidades, ganhos e evolução organizados para você decidir com mais
+                segurança onde vale a pena participar.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {benefits.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <article
+                    key={item.title}
+                    className="rounded-3xl border border-white/10 bg-[#0b1020]/80 p-6 shadow-xl"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-purple-300">
+                      <Icon size={23} />
+                    </div>
+
+                    <h3 className="mt-5 text-xl font-black">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-3 text-sm leading-6 text-slate-400">
+                      {item.text}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
             <div>
@@ -480,19 +502,37 @@ export default function Landing() {
           <div className="rounded-[2rem] border border-white/10 bg-[#0b1020]/85 p-6 shadow-xl backdrop-blur-xl sm:p-8">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-300">
-                Contato oficial
+                Dúvidas frequentes
               </p>
 
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                Fale com a BoraCoop
+                Antes de entrar, tire suas dúvidas.
               </h2>
-
-              <p className="mt-4 text-sm leading-7 text-slate-400 sm:text-base">
-                Entre em contato pelos nossos canais oficiais ou conheça quem está por trás da BoraCoop.
-              </p>
             </div>
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-7 grid gap-3 md:grid-cols-2">
+              {faqs.map((item) => (
+                <article
+                  key={item.question}
+                  className="rounded-2xl border border-white/10 bg-white/[0.025] p-5"
+                >
+                  <h3 className="font-bold text-white">
+                    {item.question}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
+                    {item.answer}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-7 border-t border-white/5 pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                Contato oficial
+              </p>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <a
                 href="https://instagram.com/boracoopoficial"
                 target="_blank"
@@ -556,6 +596,7 @@ export default function Landing() {
                   Fundador & CEO · @yslamico
                 </strong>
               </a>
+              </div>
             </div>
           </div>
         </section>
@@ -571,7 +612,7 @@ export default function Landing() {
             </h2>
 
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              Crie seu acesso e entre para a plataforma.
+              Cadastre-se gratuitamente e veja todas as oportunidades disponíveis.
             </p>
 
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
@@ -579,7 +620,7 @@ export default function Landing() {
                 to="/cadastro"
                 className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-white px-6 font-bold text-[#0b1020] transition hover:scale-[1.01]"
               >
-                Criar minha conta
+                Criar minha conta grátis
                 <ArrowRight size={18} />
               </Link>
 
