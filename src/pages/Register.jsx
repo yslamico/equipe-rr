@@ -62,6 +62,11 @@ export default function Register() {
         senha,
       });
 
+      // Meta Pixel - cadastro concluído
+      if (window.fbq) {
+        window.fbq("track", "CompleteRegistration");
+      }
+
       if (data?.session) {
         navigate("/", { replace: true });
         return;
